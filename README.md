@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/8d6d2082-ebc3-402d-aacc-5a38f057a083)
+
 # Shlink Docker
 This will create everything needed to run Shlink in a Docker container including a container for a Cloudflare Tunnel and one for the MariaDB database.
 This uses the official [Shlink image](https://github.com/shlinkio/shlink), the official [MariaDB image](https://github.com/MariaDB/mariadb-docker), the official [Shlink web client image](https://github.com/shlinkio/shlink-web-client), the official [Cloudflare tunnel image](https://github.com/cloudflare/cloudflared).
