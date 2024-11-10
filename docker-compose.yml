@@ -1,0 +1,60 @@
+services:
+    shlink_app:
+        container_name: ${CONTAINER_NAME}_app
+        image: shlinkio/shlink:stable
+        restart: unless-stopped
+        ports:
+            - ${APP_PORT}:8080
+        environment:
+          - DEFAULT_DOMAIN=${SHORT_DOMAIN}
+          - INITIAL_API_KEY=${ADMIN_API}
+          - DB_DRIVER=maria
+          - DB_NAME=${DB_NAME}
+          - DB_USER=${DB_USER}
+          - DB_PASSWORD=${DB_USER_PWD}
+          - DB_HOST=shlink_db
+          - DEFAULT_INVALID_SHORT_URL_REDIRECT=${REDIRECT_DOMAIN}
+          - DEFAULT_REGULAR_404_REDIRECT=${REDIRECT_DOMAIN}
+          - DEFAULT_BASE_URL_REDIRECT=${REDIRECT_DOMAIN}
+        depends_on:
+          - shlink_db
+          - shlink_cf_tunnel
+
+    shlink_web_client:
+        container_name: ${CONTAINER_NAME}_web_client
+        image: shlinkio/shlink-web-client:stable
+        restart: unless-stopped
+        ports:
+            - ${WEB_CLIENT_PORT}:8080
+        environment:
+          - SHLINK_SERVER_URL=https://${SHORT_DOMAIN}
+          - SHLINK_SERVER_API_KEY=${ADMIN_API}
+        depends_on:
+          - shlink_app
+
+    shlink_db:
+        container_name: ${CONTAINER_NAME}_db
+        image: mariadb:lts
+        restart: unless-stopped
+        volumes:
+            - shlink_db_data:/var/lib/mysql
+        environment:
+          - MARIADB_ROOT_PASSWORD=${DB_ROOT_PWD}
+          - MARIADB_USER=${DB_USER}
+          - MARIADB_PASSWORD=${DB_USER_PWD}
+          - MARIADB_DATABASE=${DB_NAME}
+          - MYSQL_INITDB_SKIP_TZINFO=1
+          - MARIADB_AUTO_UPGRADE=1
+
+    shlink_cf_tunnel:
+        container_name: ${CONTAINER_NAME}_cf
+        image: cloudflare/cloudflared
+        restart: unless-stopped
+        command: tunnel run
+        user: root
+        environment:
+          - TUNNEL_TOKEN=${CF_TUNNEL}
+
+volumes:
+  shlink_db_data:
+    name: ${CONTAINER_NAME}_db_data
