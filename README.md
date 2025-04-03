@@ -21,6 +21,6 @@ Use .env to define the variables.
  - `APP_PORT` the port that the Shlink application will run on and the port used with the Cloudflare tunnel.
  - `ADMIN_API` the initial API key that will be used to configure Shlink and will be preloaded to the Shlink Web Client.
  - `WEB_CLIENT_PORT` the port the Shlink web client will use.
- - `CF_TUNNEL_B64` the Base64 of the Cloudflare tunnel for Shlink.
+ - `CF_TUNNEL` the Base64 of the Cloudflare tunnel for Shlink.
 
  [More detailed documentation](https://thedxt.ca/2024/11/shlink-with-docker-and-cloudflare-tunnel/)
